@@ -107,7 +107,7 @@ class EcommerceCart
 
     }
 
-    public function incrementCartItem(int $itemId)
+    public function incrementCartItem($itemId)
     {
         $cartData = $this->getCartData();
 
@@ -124,7 +124,7 @@ class EcommerceCart
         $this->setCartData($cartData);
     }
 
-    public function decrementCartItem(int $itemId)
+    public function decrementCartItem($itemId)
     {
         $cartData = $this->getCartData();
 
@@ -145,7 +145,7 @@ class EcommerceCart
         $this->setCartData($cartData);
     }
 
-    public function removeCartItem(int $itemId)
+    public function removeCartItem($itemId)
     {
         $cartData = $this->getCartData();
 
@@ -160,7 +160,7 @@ class EcommerceCart
         }
     }
 
-    public function checkIdInCartItems(int $itemId)
+    public function checkIdInCartItems($itemId)
     {
         $cartData = $this->getCartData();
 

@@ -34,7 +34,7 @@ use Itemvirtual\EcommerceCart\Facades\EcommerceCart;
 EcommerceCart::addToCart([
     'id' => $Product->id,
     'title' => $Product->name,
-    'price' => $Product->price,
+    'price' => floatval($Product->price),
     'tax' => 21.0,
     'amount' => 1,
     'data' => [ // add your custom data here
