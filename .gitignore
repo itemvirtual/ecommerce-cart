@@ -1,0 +1,9 @@
+.DS_Store
+
+/.github
+/node_modules
+/vendor
+composer.lock
+composer.phar
+/.idea
+/.vscode
