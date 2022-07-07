@@ -74,12 +74,12 @@ class EcommerceCart
 
         // If item is already in cart, remove it
         if ($alreadyInCart) {
-            $this->removeFromCart($cartDataToAdd['id']);
+            $this->removeCartItem($cartDataToAdd['id']);
         }
 
         // If no item amount, remove it
         if (array_key_exists('amount', $cartDataToAdd) && intval($cartDataToAdd['amount'] <= 0)) {
-            $this->removeFromCart($cartDataToAdd['id']);
+            $this->removeCartItem($cartDataToAdd['id']);
         } else {
             // create cart item
             $this->createCartItem($cartDataToAdd);
