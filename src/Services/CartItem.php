@@ -11,7 +11,10 @@ class CartItem
     public $price;
     public $tax;
     public $amount;
-    public $totals;
+    private $totals;
+    public $discount;
+    public $coupon;
+    public $shipping;
     public $data = [];
     private $applyTax;
     private $requiredFields = ['id', 'title', 'price', 'tax', 'amount'];
@@ -66,7 +69,7 @@ class CartItem
     public function calculateCartItemTotals()
     {
         $this->totals = [
-            'price' => $this->calculateItemSubtotal(),
+            'subtotal' => $this->calculateItemSubtotal(),
             'tax' => $this->calculateItemTaxTotal(),
             'total' => $this->calculateItemTotal(),
         ];
@@ -101,7 +104,6 @@ class CartItem
         if ($this->tax && floatval($this->tax) > 0 && $this->applyTax) {
             if (config('ecommerce-cart.taxes_included')) {
                 $taxesItemTotals = $this->amount * (floatval($this->price) - floatval($this->price / (1 + ($this->tax / 100))));
-//                $taxesItemTotals = ($this->amount * floatval($this->price)) - ($this->amount * floatval($this->price / (1 + ($this->tax / 100))));
             } else {
                 $taxesItemTotals = ($this->amount * floatval($this->price)) * ($this->tax / 100);
             }
@@ -231,6 +233,25 @@ class CartItem
     /**
      * @return mixed
      */
+    public function getTotals()
+    {
+        return $this->totals;
+    }
+
+    /**
+     * @param mixed $totals
+     * @return CartItem
+     */
+    public function setTotals($totals)
+    {
+        $this->totals = $totals;
+        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
     public function getApplyTax()
     {
         return $this->applyTax;
@@ -243,5 +264,60 @@ class CartItem
     {
         $this->applyTax = $applyTax;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param mixed $discount
+     * @return CartItem
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoupon()
+    {
+        return $this->coupon;
+    }
+
+    /**
+     * @param mixed $coupon
+     * @return CartItem
+     */
+    public function setCoupon($coupon)
+    {
+        $this->coupon = $coupon;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShipping()
+    {
+        return $this->shipping;
+    }
+
+    /**
+     * @param mixed $shipping
+     * @return CartItem
+     */
+    public function setShipping($shipping)
+    {
+        $this->shipping = $shipping;
+        return $this;
+    }
+
 
 }

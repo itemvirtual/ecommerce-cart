@@ -4,9 +4,11 @@ namespace Itemvirtual\EcommerceCart;
 
 use Illuminate\Support\Str;
 use Itemvirtual\EcommerceCart\Services\CartItem;
+use Itemvirtual\EcommerceCart\Traits\CalculateTotals;
 
 class EcommerceCart
 {
+    use CalculateTotals;
 
     const APPLY_TAX = true;
 
@@ -114,7 +116,7 @@ class EcommerceCart
         if ($this->hasItems()) {
             foreach ($cartData['items'] as $item) {
                 if ($item->id == $itemId) {
-                    $item->amount++;
+                    $item->setAmount(++$item->amount);
                     $item->setApplyTax($cartData['apply_tax']);
                     $item->calculateCartItemTotals();
                 }
@@ -131,7 +133,7 @@ class EcommerceCart
         if ($this->hasItems()) {
             foreach ($cartData['items'] as $k_item => $item) {
                 if ($item->id == $itemId) {
-                    $item->amount--;
+                    $item->setAmount(--$item->amount);
                     $item->setApplyTax($cartData['apply_tax']);
                     $item->calculateCartItemTotals();
                 }
@@ -217,7 +219,7 @@ class EcommerceCart
 
     /* *********************************************************** */
 
-    private function getCartData()
+    public function getCartData()
     {
         return session(config('ecommerce-cart.cart_session_name'), []);
     }
@@ -261,6 +263,11 @@ class EcommerceCart
 
     public function getSubtotal()
     {
+        $cartData = $this->getCartData();
+        if ($this->hasItems()) {
+            return $this->calculateSubtotal($cartData);
+        }
+        return 0;
     }
 
     public function getCouponTotal()
@@ -273,10 +280,26 @@ class EcommerceCart
 
     public function getTaxTotals()
     {
+        $cartData = $this->getCartData();
+        $taxesTotals = [];
+
+        if (!array_key_exists('apply_tax', $cartData)) {
+            $cartData['apply_tax'] = self::APPLY_TAX;
+        }
+
+        if ($this->hasItems()) {
+            $taxesTotals = $this->calculateTaxTotalsGroupByTax($cartData);
+        }
+        return $taxesTotals;
     }
 
     public function getTotal()
     {
+        $cartData = $this->getCartData();
+        if ($this->hasItems()) {
+            return $this->calculateTotal($cartData);
+        }
+        return 0;
     }
 
     /* *********************************************************** CUSTOMER */

@@ -62,6 +62,23 @@ EcommerceCart::removeCartItem($Product->id);
 EcommerceCart::setApplyTax($boolean);
 ```
 
+#### Get Totals
+
+```php
+EcommerceCart::getSubtotal();
+EcommerceCart::getTaxTotals();
+EcommerceCart::getTotal();
+```
+
+#### Get Cart Items
+
+```php
+EcommerceCart::getItems();
+
+EcommerceCart::countItems();
+EcommerceCart::getTotal();
+```
+
 ### Testing
 
 ```bash
