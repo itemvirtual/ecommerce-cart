@@ -31,6 +31,11 @@ class EcommerceCart
         return array_key_exists('items', $cartData) && count($cartData['items']);
     }
 
+    public function hasItem($itemId)
+    {
+        return $this->checkIdInCartItems($itemId);
+    }
+
     public function countItems()
     {
         $cartData = $this->getCartData();
