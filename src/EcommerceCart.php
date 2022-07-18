@@ -66,6 +66,7 @@ class EcommerceCart
 
     public function destroyCart()
     {
+        return session()->forget(config('ecommerce-cart.cart_session_name'));
     }
 
     /* *********************************************************** */

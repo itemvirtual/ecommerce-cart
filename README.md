@@ -3,7 +3,6 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/itemvirtual/ecommerce-cart.svg?style=flat-square)](https://packagist.org/packages/itemvirtual/ecommerce-cart)
 [![Total Downloads](https://img.shields.io/packagist/dt/itemvirtual/ecommerce-cart.svg?style=flat-square)](https://packagist.org/packages/itemvirtual/ecommerce-cart)
 
-
 This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
 
 ## Installation
@@ -79,6 +78,12 @@ EcommerceCart::countItems();
 EcommerceCart::getTotal();
 ```
 
+#### Destroy Cart
+
+```php
+EcommerceCart::destroyCart();
+```
+
 ### Testing
 
 ```bash
@@ -95,9 +100,9 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
--   [Sergio](https://github.com/sergio-item)
--   [Itemvirtual](https://github.com/itemvirtual)
--   [All Contributors](../../contributors)
+- [Sergio](https://github.com/sergio-item)
+- [Itemvirtual](https://github.com/itemvirtual)
+- [All Contributors](../../contributors)
 
 ## License
 
