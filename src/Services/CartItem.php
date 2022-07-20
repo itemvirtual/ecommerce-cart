@@ -75,7 +75,7 @@ class CartItem
         ];
     }
 
-    /* *********************************************************** */
+    /* *************************************************************************************************** Calculate totals */
 
     /**
      * @return float
@@ -135,7 +135,24 @@ class CartItem
         return round($itemTotal, 2);
     }
 
-    /* *********************************************************** */
+    /* *************************************************************************************************** Get item totals */
+
+    public function getItemSubtotal()
+    {
+        return $this->totals['subtotal'];
+    }
+
+    public function getItemTax()
+    {
+        return $this->totals['tax'];
+    }
+
+    public function getItemTotal()
+    {
+        return $this->totals['total'];
+    }
+
+    /* *************************************************************************************************** Getters and Setters */
 
     /**
      * Set properties of CartItem
