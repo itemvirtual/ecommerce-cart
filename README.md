@@ -7,19 +7,32 @@ This is where your description should go. Try and limit it to a paragraph or two
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require itemvirtual/ecommerce-cart
 ```
-
-## Usage
 
 Publish config (with `--force` option to update)
 
 ``` bash
 php artisan vendor:publish --provider="Itemvirtual\EcommerceCart\EcommerceCartServiceProvider" --tag=config
 ```
+
+You can change the `config` values for `cart_session_name` and `taxes_included`:
+
+```dotenv
+#ECOMMERCE_CART_SESSION_NAME="ecommerceCart"
+ECOMMERCE_TAXES_INCLUDED=true
+```
+
+Add `EcommerceCart` to your `config/app` aliases array
+
+```php
+'EcommerceCart' => Itemvirtual\EcommerceCart\Facades\EcommerceCart::class,
+```
+
+## Usage
 
 Use the `EcommerceCart` Facade
 

@@ -237,7 +237,9 @@ class EcommerceCart
 
     /* *********************************************************** SHIPMENT */
 
-//    public function hasShipment(){}
+    public function hasShipment()
+    {
+    }
 
     public function setShipment($shipment)
     {
@@ -309,7 +311,7 @@ class EcommerceCart
     }
 
     /* *********************************************************** CUSTOMER */
-
+/*
     public function setCustomer($customerId)
     {
     }
@@ -357,6 +359,7 @@ class EcommerceCart
     public function removeCustomerShipmentData()
     {
     }
+*/
 
     /* *********************************************************** TRANSACTION */
 
