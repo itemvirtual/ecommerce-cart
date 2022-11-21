@@ -4,6 +4,7 @@ namespace Itemvirtual\EcommerceCart\Services;
 
 use Illuminate\Support\Str;
 
+#[AllowDynamicProperties]
 class CartItem
 {
     public $id;

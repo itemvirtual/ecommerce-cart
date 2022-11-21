@@ -235,18 +235,37 @@ class EcommerceCart
         session([config('ecommerce-cart.cart_session_name') => $cartData]);
     }
 
-    /* *********************************************************** SHIPMENT */
+    /* *********************************************************** SHIPPING */
 
-    public function hasShipment()
+    public function hasShipping()
     {
+        $cartData = $this->getCartData();
+        return array_key_exists('shipping', $cartData) && count($cartData['shipping']);
     }
 
-    public function setShipment($shipment)
+    public function setShipping($shipping)
     {
+        $this->validateShippingRequiredData($shipping);
+        $this->addCartData('shipping', $shipping);
     }
 
-    public function getShipment()
+    public function removeShipping()
     {
+        $this->removeCartData('shipping');
+    }
+
+    public function getShipping()
+    {
+        $cartData = $this->getCartData();
+
+        if ($this->hasShipping()) {
+            $shipping = $cartData['shipping'];
+            if (floatval($this->getSubtotal()) >= floatval($shipping['free_from'])) {
+                $shipping['free'] = true;
+            }
+            return (object)$shipping;
+        }
+        return null;
     }
 
     /* *********************************************************** COUPON */
@@ -282,8 +301,16 @@ class EcommerceCart
     {
     }
 
-    public function getShipmentTotal()
+    public function getShippingTotal()
     {
+        $shippingTotal = 0;
+        if ($this->hasShipping()) {
+            $shipping = $this->getShipping();
+            if ($this->getSubtotal() < $shipping->free_from) {
+                return $shipping->value;
+            }
+        }
+        return $shippingTotal;
     }
 
     public function getTaxTotals()
@@ -305,61 +332,61 @@ class EcommerceCart
     {
         $cartData = $this->getCartData();
         if ($this->hasItems()) {
-            return $this->calculateTotal($cartData);
+            return $this->calculateTotal($cartData) + $this->getShippingTotal();
         }
         return 0;
     }
 
     /* *********************************************************** CUSTOMER */
-/*
-    public function setCustomer($customerId)
-    {
-    }
+    /*
+        public function setCustomer($customerId)
+        {
+        }
 
-    public function getCustomer()
-    {
-    }
+        public function getCustomer()
+        {
+        }
 
-    public function removeCustomer()
-    {
-    }
+        public function removeCustomer()
+        {
+        }
 
-    public function setCustomerData($customerData)
-    {
-    }
+        public function setCustomerData($customerData)
+        {
+        }
 
-    public function getCustomerData()
-    {
-    }
+        public function getCustomerData()
+        {
+        }
 
-    public function removeCustomerData()
-    {
-    }
+        public function removeCustomerData()
+        {
+        }
 
-    public function setCustomerShipment($customerShipmentId)
-    {
-    }
+        public function setCustomerShipping($customerShippingId)
+        {
+        }
 
-    public function getCustomerShipment()
-    {
-    }
+        public function getCustomerShipping()
+        {
+        }
 
-    public function removeCustomerShipment()
-    {
-    }
+        public function removeCustomerShipping()
+        {
+        }
 
-    public function setCustomerShipmentData($customerShipmentData)
-    {
-    }
+        public function setCustomerShippingData($customerShippingData)
+        {
+        }
 
-    public function getCustomerShipmentData()
-    {
-    }
+        public function getCustomerShippingData()
+        {
+        }
 
-    public function removeCustomerShipmentData()
-    {
-    }
-*/
+        public function removeCustomerShippingData()
+        {
+        }
+    */
 
     /* *********************************************************** TRANSACTION */
 
@@ -389,6 +416,14 @@ class EcommerceCart
         $this->setCartData($cartData);
     }
 
-//    private function validateShipmentRequiredData($shipmentData){}
+    private function validateShippingRequiredData($shippingData)
+    {
+        $requiredFields = ['id', 'title', 'value', 'free_from'];
+        foreach ($requiredFields as $field) {
+            if (!array_key_exists($field, $shippingData)) {
+                throw new \Exception($field . ' is a required field in shipping data. [' . implode(', ', $requiredFields) . '] are required');
+            }
+        }
+    }
 
 }

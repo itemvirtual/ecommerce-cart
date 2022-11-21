@@ -82,13 +82,49 @@ EcommerceCart::getTaxTotals();
 EcommerceCart::getTotal();
 ```
 
+#### Shipping
+
+Add Global shipping
+
+```php
+$ShippingData = [
+    'id' => $Shipping->id,
+    'title' => $Shipping->title,
+    'value' => $Shipping->value,
+    'free_from' => $Shipping->free_from,
+];
+EcommerceCart::setShipping($ShippingData);
+```
+
+Remove Shipping data
+
+```php
+EcommerceCart::removeShipping();
+```
+
+Get Shipping data
+
+```php
+EcommerceCart::getShipping();
+
+// Returns an object with 4 or 5 properties
+{
+  +"id": 3
+  +"title": "Europe"
+  +"value": 10
+  +"free_from": 200
+  +"free": true
+}
+```
+
 #### Get Cart Items
 
 ```php
-EcommerceCart::getItems();
+$cartItems = EcommerceCart::getItems();
 
+EcommerceCart::hasItems();
 EcommerceCart::countItems();
-EcommerceCart::getTotal();
+
 ```
 
 #### Destroy Cart
