@@ -184,14 +184,14 @@ class EcommerceCart
 
     /* *********************************************************** */
 
-    public function addCartData($key, $value)
+    private function addCartData($key, $value)
     {
         $cartData = $this->getCartData();
         $cartData[$key] = $value;
         $this->setCartData($cartData);
     }
 
-    public function removeCartData($key)
+    private function removeCartData($key)
     {
         $cartData = $this->getCartData();
         if (array_key_exists($key, $cartData)) {
@@ -233,6 +233,18 @@ class EcommerceCart
     private function setCartData($cartData)
     {
         session([config('ecommerce-cart.cart_session_name') => $cartData]);
+    }
+
+    public function setCustomCartData($key, $value)
+    {
+        $this->validateCustomCartData($key);
+        $this->addCartData($key, $value);
+    }
+
+    public function removeCustomCartData($key)
+    {
+        $this->validateCustomCartData($key);
+        $this->removeCartData($key);
     }
 
     /* *********************************************************** SHIPPING */
@@ -396,7 +408,9 @@ class EcommerceCart
 
     /* *********************************************************** VALIDATIONS */
 
-
+    /**
+     *
+     */
     private function validateCartRequiredData()
     {
         $cartData = $this->getCartData();
@@ -416,6 +430,22 @@ class EcommerceCart
         $this->setCartData($cartData);
     }
 
+    /**
+     * @param $key
+     * @throws \Exception
+     */
+    private function validateCustomCartData($key)
+    {
+        $reservedFields = ['cart_uuid', 'items', 'apply_tax', 'shipping'];
+        if (in_array($key, $reservedFields)) {
+            throw new \Exception($key . ' is a reserved field name in the ecommerceCart.');
+        }
+    }
+
+    /**
+     * @param $shippingData
+     * @throws \Exception
+     */
     private function validateShippingRequiredData($shippingData)
     {
         $requiredFields = ['id', 'title', 'value', 'free_from'];
