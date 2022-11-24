@@ -76,6 +76,17 @@ class CartItem
         ];
     }
 
+    /**
+     * Get CartItem Totals
+     *
+     * @return void
+     */
+    public function getCartItemTotals()
+    {
+        $this->calculateCartItemTotals();
+        return $this->totals;
+    }
+
     /* *************************************************************************************************** Calculate totals */
 
     /**
