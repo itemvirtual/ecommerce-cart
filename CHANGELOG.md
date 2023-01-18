@@ -2,6 +2,11 @@
 
 All notable changes to `ecommerce-cart` will be documented in this file
 
-## 1.0.0 - 201X-XX-XX
+## 0.2.1 - 2023-01-18
+
+- Add laravel 9 support
+- Totals
+
+## 0.1.1 - 2022-09-14
 
 - initial release
