@@ -41,10 +41,12 @@ trait CalculateTotals
         $taxesTotals = [];
 
         foreach ($cartData['items'] as $item) {
-            if (!array_key_exists((string)$item->tax, $taxesTotals)) {
-                $taxesTotals[(string)$item->tax] = 0;
+            if ($item->isValidTax) {
+                if (!array_key_exists((string)$item->tax, $taxesTotals)) {
+                    $taxesTotals[(string)$item->tax] = 0;
+                }
+                $taxesTotals[(string)$item->tax] += $item->getTotals()['tax'];
             }
-            $taxesTotals[(string)$item->tax] += $item->getTotals()['tax'];
         }
 
         return $taxesTotals;

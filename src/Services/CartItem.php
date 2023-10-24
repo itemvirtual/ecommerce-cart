@@ -18,6 +18,7 @@ class CartItem
     public $shipping;
     public $data = [];
     private $applyTax;
+    public $isValidTax;
     private $requiredFields = ['id', 'title', 'price', 'tax', 'amount'];
 
     /**
@@ -34,6 +35,8 @@ class CartItem
         foreach ($cartItemData as $key => $value) {
             $this->createProperty($key, $value);
         }
+
+        $this->isValidTax = $this->tax && floatval($this->tax) > 0;
 
         $this->calculateCartItemTotals();
     }
@@ -95,7 +98,7 @@ class CartItem
     public function calculateItemSubtotal()
     {
         $itemSubtotal = 0;
-        if (config('ecommerce-cart.taxes_included')) {
+        if (config('ecommerce-cart.taxes_included') && $this->isValidTax) {
             $itemSubtotal = $this->amount * floatval($this->price / (1 + ($this->tax / 100)));
         } else {
             $itemSubtotal = $this->amount * floatval($this->price);
@@ -113,7 +116,7 @@ class CartItem
     {
         $taxesItemTotals = 0;
 
-        if ($this->tax && floatval($this->tax) > 0 && $this->applyTax) {
+        if ($this->applyTax && $this->isValidTax) {
             if (config('ecommerce-cart.taxes_included')) {
                 $taxesItemTotals = $this->amount * (floatval($this->price) - floatval($this->price / (1 + ($this->tax / 100))));
             } else {
@@ -132,13 +135,11 @@ class CartItem
     {
         $itemTotal = 0;
 
-        if ($this->applyTax) {
-            if ($this->tax && floatval($this->tax) > 0) {
-                if (config('ecommerce-cart.taxes_included')) {
-                    $itemTotal = $this->amount * floatval($this->price);
-                } else {
-                    $itemTotal = ($this->amount * floatval($this->price)) * (1 + ($this->tax / 100));
-                }
+        if ($this->applyTax && $this->isValidTax) {
+            if (config('ecommerce-cart.taxes_included')) {
+                $itemTotal = $this->amount * floatval($this->price);
+            } else {
+                $itemTotal = ($this->amount * floatval($this->price)) * (1 + ($this->tax / 100));
             }
         } else {
             $itemTotal = $this->amount * floatval($this->price);
