@@ -168,6 +168,21 @@ class EcommerceCart
         }
     }
 
+    public function updateCartItem($cartItem)
+    {
+        $cartData = $this->getCartData();
+
+        if ($this->hasItems()) {
+            foreach ($cartData['items'] as $k_item => $item) {
+                if ($item->id == $cartItem->id) {
+                    $cartData['items'][$k_item] = $cartItem;
+                }
+            }
+
+            $this->setCartData($cartData);
+        }
+    }
+
     public function checkIdInCartItems($itemId)
     {
         $cartData = $this->getCartData();
