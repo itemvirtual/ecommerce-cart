@@ -333,7 +333,7 @@ class EcommerceCart
         $shippingTotal = 0;
         if ($this->hasShipping()) {
             $shipping = $this->getShipping();
-            if ($this->getSubtotal() < $shipping->free_from) {
+            if (floatval($this->getTotalWithoutShipping()) < floatval($shipping->free_from)) {
                 return $shipping->value;
             }
         }
