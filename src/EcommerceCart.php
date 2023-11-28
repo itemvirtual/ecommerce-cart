@@ -287,7 +287,7 @@ class EcommerceCart
 
         if ($this->hasShipping()) {
             $shipping = $cartData['shipping'];
-            if (floatval($this->getSubtotal()) >= floatval($shipping['free_from'])) {
+            if (floatval($this->getTotalWithoutShipping()) >= floatval($shipping['free_from'])) {
                 $shipping['free'] = true;
             }
             return (object)$shipping;
@@ -353,6 +353,15 @@ class EcommerceCart
             $taxesTotals = $this->calculateTaxTotalsGroupByTax($cartData);
         }
         return $taxesTotals;
+    }
+
+    public function getTotalWithoutShipping()
+    {
+        $cartData = $this->getCartData();
+        if ($this->hasItems()) {
+            return $this->calculateTotal($cartData);
+        }
+        return 0;
     }
 
     public function getTotal()

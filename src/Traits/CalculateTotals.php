@@ -23,11 +23,11 @@ trait CalculateTotals
      */
     public function calculateTotal($cartData)
     {
-        $subtotal = 0;
+        $total = 0;
         foreach ($cartData['items'] as $item) {
-            $subtotal += $item->getTotals()['total'];
+            $total += $item->getTotals()['total'];
         }
-        return $subtotal;
+        return $total;
     }
 
     /**
