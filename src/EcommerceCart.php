@@ -287,8 +287,10 @@ class EcommerceCart
 
         if ($this->hasShipping()) {
             $shipping = $cartData['shipping'];
-            if (floatval($this->getTotalWithoutShipping()) >= floatval($shipping['free_from'])) {
-                $shipping['free'] = true;
+            if (!is_null($shipping['free_from'])) {
+                if (floatval($this->getTotalWithoutShipping()) >= floatval($shipping['free_from'])) {
+                    $shipping['free'] = true;
+                }
             }
             return (object)$shipping;
         }
@@ -333,6 +335,9 @@ class EcommerceCart
         $shippingTotal = 0;
         if ($this->hasShipping()) {
             $shipping = $this->getShipping();
+            if (is_null($shipping->free_from)) {
+                return $shipping->value;
+            }
             if (floatval($this->getTotalWithoutShipping()) < floatval($shipping->free_from)) {
                 return $shipping->value;
             }
