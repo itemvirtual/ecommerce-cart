@@ -68,6 +68,19 @@ EcommerceCart::decrementCartItem($Product->id);
 EcommerceCart::removeCartItem($Product->id);
 ```
 
+#### Set tax
+
+```php
+EcommerceCart::setTax($float);
+```
+
+If you save the tax_id value, you can change it with `updateCartItemsDataValue()`
+
+```php
+EcommerceCart::updateCartItemsDataValue($key, $value);
+// EcommerceCart::updateCartItemsDataValue('tax_id', 1);
+```
+
 #### Set apply tax (p.ex if not European)
 
 ```php

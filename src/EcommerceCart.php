@@ -54,6 +54,21 @@ class EcommerceCart
         return collect();
     }
 
+    public function setTax($value)
+    {
+        $cartData = $this->getCartData();
+
+        if ($this->hasItems()) {
+            foreach ($cartData['items'] as $k_item => $item) {
+                $cartData['items'][$k_item]->tax = floatval($value);
+            }
+
+            $this->setCartData($cartData);
+        }
+
+        $this->recalculateCartItemTotals();
+    }
+
     public function setApplyTax(bool $value)
     {
         $cartData = $this->getCartData();
@@ -177,6 +192,19 @@ class EcommerceCart
                 if ($item->id == $cartItem->id) {
                     $cartData['items'][$k_item] = $cartItem;
                 }
+            }
+
+            $this->setCartData($cartData);
+        }
+    }
+
+    public function updateCartItemsDataValue($key, $value)
+    {
+        $cartData = $this->getCartData();
+
+        if ($this->hasItems()) {
+            foreach ($cartData['items'] as $k_item => $item) {
+                $cartData['items'][$k_item]->data[$key] = $value;
             }
 
             $this->setCartData($cartData);
