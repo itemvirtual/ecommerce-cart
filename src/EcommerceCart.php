@@ -12,7 +12,6 @@ class EcommerceCart
 
     const APPLY_TAX = true;
 
-
     public function getCartId()
     {
         $cartData = $this->getCartData();
@@ -66,6 +65,7 @@ class EcommerceCart
             $this->setCartData($cartData);
         }
 
+        // Recalculate cart items totals
         $this->recalculateCartItemTotals();
     }
 
@@ -82,6 +82,13 @@ class EcommerceCart
     public function destroyCart()
     {
         return session()->forget(config('ecommerce-cart.cart_session_name'));
+    }
+
+    private function destroyCartIfEmpty()
+    {
+        if (!$this->hasItems()) {
+            $this->destroyCart();
+        }
     }
 
     /* *********************************************************** */
@@ -116,7 +123,6 @@ class EcommerceCart
      */
     private function createCartItem(array $cartDataToAdd)
     {
-
         // Validate required fields in ecommerceCart
         $this->validateCartRequiredData();
 
@@ -127,7 +133,6 @@ class EcommerceCart
         array_push($cartData['items'], $CartItem);
 
         $this->setCartData($cartData);
-
     }
 
     public function incrementCartItem($itemId)
@@ -166,6 +171,10 @@ class EcommerceCart
         }
 
         $this->setCartData($cartData);
+
+        // If cart is empty, destroy to remove shipping and other stuff
+        $this->destroyCartIfEmpty();
+
     }
 
     public function removeCartItem($itemId)
@@ -181,6 +190,9 @@ class EcommerceCart
 
             $this->setCartData($cartData);
         }
+
+        // If cart is empty, destroy to remove shipping and other stuff
+        $this->destroyCartIfEmpty();
     }
 
     public function updateCartItem($cartItem)
@@ -386,6 +398,15 @@ class EcommerceCart
             $taxesTotals = $this->calculateTaxTotalsGroupByTax($cartData);
         }
         return $taxesTotals;
+    }
+
+    public function getTaxTotalValue()
+    {
+        $taxTotal = 0;
+        foreach ($this->getTaxTotals() as $tax) {
+            $taxTotal += $tax;
+        }
+        return $taxTotal;
     }
 
     public function getTotalWithoutShipping()

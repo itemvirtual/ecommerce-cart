@@ -36,7 +36,7 @@ class CartItem
             $this->createProperty($key, $value);
         }
 
-        $this->isValidTax = $this->tax && floatval($this->tax) > 0;
+        $this->isValidTax = $this->tax && floatval($this->tax) >= 0;
 
         $this->calculateCartItemTotals();
     }

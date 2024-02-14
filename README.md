@@ -90,9 +90,15 @@ EcommerceCart::setApplyTax($boolean);
 #### Get Totals
 
 ```php
-EcommerceCart::getSubtotal();
-EcommerceCart::getTaxTotals();
 EcommerceCart::getTotal();
+EcommerceCart::getSubtotal();
+// return taxes array
+EcommerceCart::getTaxTotals();
+// return total tax amount
+EcommerceCart::getTaxTotalValue();
+
+// Get total without shipping
+EcommerceCart::getTotalWithoutShipping();
 ```
 
 #### Shipping
