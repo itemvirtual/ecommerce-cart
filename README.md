@@ -24,6 +24,7 @@ You can change the `config` values for `cart_session_name` and `taxes_included`:
 ```dotenv
 #ECOMMERCE_CART_SESSION_NAME="ecommerceCart"
 ECOMMERCE_TAXES_INCLUDED=true
+ECOMMERCE_CALCULATE_TOTALS=true
 ```
 
 Add `EcommerceCart` to your `config/app` aliases array

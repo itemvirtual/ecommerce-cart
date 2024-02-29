@@ -327,11 +327,6 @@ class EcommerceCart
 
         if ($this->hasShipping()) {
             $shipping = $cartData['shipping'];
-            if (!is_null($shipping['free_from'])) {
-                if (floatval($this->getTotalWithoutShipping()) >= floatval($shipping['free_from'])) {
-                    $shipping['free'] = true;
-                }
-            }
             return (object)$shipping;
         }
         return null;
@@ -339,26 +334,47 @@ class EcommerceCart
 
     /* *********************************************************** COUPON */
 
+    public function setCoupon($coupon)
+    {
+        $this->validateCouponRequiredData($coupon);
+        $this->addCartData('coupon', $coupon);
+    }
+
     public function hasCoupon()
     {
+        $cartData = $this->getCartData();
+        return array_key_exists('coupon', $cartData) && count($cartData['coupon']);
+    }
+
+    public function removeCoupon()
+    {
+        $this->removeCartData('coupon');
     }
 
     public function getCoupon()
     {
-    }
+        $cartData = $this->getCartData();
 
-    public function checkCoupon($couponCode)
-    {
-    }
-
-    private function checkValidCoupon($Coupon)
-    {
+        if ($this->hasCoupon()) {
+            $coupon = $cartData['coupon'];
+            return (object)$coupon;
+        }
+        return null;
     }
 
     /* *********************************************************** TOTALS */
 
+    private function throwCalculateTotalsException()
+    {
+        throw new \Exception('Calculate Totals is disabled in your config. Check that "calculate_totals" is present in your "config/ecommerce-cart.php" file and add ECOMMERCE_CALCULATE_TOTALS to your ".env" file');
+    }
+
     public function getSubtotal()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
+
         $cartData = $this->getCartData();
         if ($this->hasItems()) {
             return $this->calculateSubtotal($cartData);
@@ -368,10 +384,17 @@ class EcommerceCart
 
     public function getCouponTotal()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
     }
 
     public function getShippingTotal()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
+
         $shippingTotal = 0;
         if ($this->hasShipping()) {
             $shipping = $this->getShipping();
@@ -387,6 +410,10 @@ class EcommerceCart
 
     public function getTaxTotals()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
+
         $cartData = $this->getCartData();
         $taxesTotals = [];
 
@@ -402,6 +429,10 @@ class EcommerceCart
 
     public function getTaxTotalValue()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
+
         $taxTotal = 0;
         foreach ($this->getTaxTotals() as $tax) {
             $taxTotal += $tax;
@@ -411,6 +442,10 @@ class EcommerceCart
 
     public function getTotalWithoutShipping()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
+
         $cartData = $this->getCartData();
         if ($this->hasItems()) {
             return $this->calculateTotal($cartData);
@@ -420,6 +455,10 @@ class EcommerceCart
 
     public function getTotal()
     {
+        if (!config('ecommerce-cart.calculate_totals')) {
+            $this->throwCalculateTotalsException();
+        }
+
         $cartData = $this->getCartData();
         if ($this->hasItems()) {
             return $this->calculateTotal($cartData) + $this->getShippingTotal();
@@ -530,6 +569,20 @@ class EcommerceCart
         foreach ($requiredFields as $field) {
             if (!array_key_exists($field, $shippingData)) {
                 throw new \Exception($field . ' is a required field in shipping data. [' . implode(', ', $requiredFields) . '] are required');
+            }
+        }
+    }
+
+    /**
+     * @param $couponData
+     * @throws \Exception
+     */
+    private function validateCouponRequiredData($couponData)
+    {
+        $requiredFields = ['id', 'title', 'value', 'is_global'];
+        foreach ($requiredFields as $field) {
+            if (!array_key_exists($field, $couponData)) {
+                throw new \Exception($field . ' is a required field in coupon data. [' . implode(', ', $requiredFields) . '] are required');
             }
         }
     }
