@@ -466,63 +466,6 @@ class EcommerceCart
         return 0;
     }
 
-    /* *********************************************************** CUSTOMER */
-    /*
-        public function setCustomer($customerId)
-        {
-        }
-
-        public function getCustomer()
-        {
-        }
-
-        public function removeCustomer()
-        {
-        }
-
-        public function setCustomerData($customerData)
-        {
-        }
-
-        public function getCustomerData()
-        {
-        }
-
-        public function removeCustomerData()
-        {
-        }
-
-        public function setCustomerShipping($customerShippingId)
-        {
-        }
-
-        public function getCustomerShipping()
-        {
-        }
-
-        public function removeCustomerShipping()
-        {
-        }
-
-        public function setCustomerShippingData($customerShippingData)
-        {
-        }
-
-        public function getCustomerShippingData()
-        {
-        }
-
-        public function removeCustomerShippingData()
-        {
-        }
-    */
-
-    /* *********************************************************** TRANSACTION */
-
-//    public function getCartForTransaction(){}
-
-//    public function getCartTotalsForTransaction(){}
-
     /* *********************************************************** VALIDATIONS */
 
     /**
@@ -553,7 +496,7 @@ class EcommerceCart
      */
     private function validateCustomCartData($key)
     {
-        $reservedFields = ['cart_uuid', 'items', 'apply_tax', 'shipping'];
+        $reservedFields = ['cart_uuid', 'items', 'apply_tax', 'shipping', 'coupon'];
         if (in_array($key, $reservedFields)) {
             throw new \Exception($key . ' is a reserved field name in the ecommerceCart.');
         }
@@ -565,7 +508,7 @@ class EcommerceCart
      */
     private function validateShippingRequiredData($shippingData)
     {
-        $requiredFields = ['id', 'title', 'value', 'free_from'];
+        $requiredFields = config('ecommerce-cart.required_shipping_data');
         foreach ($requiredFields as $field) {
             if (!array_key_exists($field, $shippingData)) {
                 throw new \Exception($field . ' is a required field in shipping data. [' . implode(', ', $requiredFields) . '] are required');
@@ -579,7 +522,7 @@ class EcommerceCart
      */
     private function validateCouponRequiredData($couponData)
     {
-        $requiredFields = ['id', 'title', 'value', 'is_global'];
+        $requiredFields = config('ecommerce-cart.required_coupon_data');
         foreach ($requiredFields as $field) {
             if (!array_key_exists($field, $couponData)) {
                 throw new \Exception($field . ' is a required field in coupon data. [' . implode(', ', $requiredFields) . '] are required');

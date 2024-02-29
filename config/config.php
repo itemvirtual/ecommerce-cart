@@ -36,4 +36,26 @@ return [
     */
     'calculate_totals' => env('ECOMMERCE_CALCULATE_TOTALS', false),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Shipping required data
+    |--------------------------------------------------------------------------
+    |
+    | Array of keys required for shipping data
+    |
+    */
+    'required_shipping_data' => ['id', 'title', 'value', 'free_from'],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Coupon required data
+    |--------------------------------------------------------------------------
+    |
+    | Array of keys required for coupon data
+    |
+    */
+    'required_coupon_data' => ['id', 'title', 'code', 'value', 'is_percent'],
+
 ];
