@@ -75,6 +75,13 @@ EcommerceCart::removeCartItem($Product->id);
 EcommerceCart::setTax($float);
 ```
 
+The tax value is set for each item in the cart. To set a global tax value, use `setCustomCartData()`  
+It will not affect the calculation of totals on the cartItem, It only serves as data to calculate your totals.
+
+```php
+EcommerceCart::setCustomCartData('tax', floatval($tax));
+```
+
 If you save the tax_id value, you can change it with `updateCartItemsDataValue()`
 
 ```php
@@ -88,7 +95,23 @@ EcommerceCart::updateCartItemsDataValue($key, $value);
 EcommerceCart::setApplyTax($boolean);
 ```
 
-#### Get Totals
+## Get Totals
+
+### Custom Total calculations
+
+If you need to calculate your Cart Totals, set `ECOMMERCE_CALCULATE_TOTALS` to `false` in your `.env` file
+
+```dotenv
+ECOMMERCE_CALCULATE_TOTALS=false
+```
+
+Create your service and use `EcommerceCart::getItems()` to get your cart contents
+
+```php
+$cartItems = EcommerceCart::getItems();
+```
+
+### Total calculations
 
 ```php
 EcommerceCart::getTotal();

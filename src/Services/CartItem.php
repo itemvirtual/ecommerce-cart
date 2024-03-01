@@ -349,5 +349,4 @@ class CartItem
         return $this;
     }
 
-
 }

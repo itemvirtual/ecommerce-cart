@@ -12,6 +12,9 @@ class EcommerceCart
 
     const APPLY_TAX = true;
 
+    /**
+     * @return string
+     */
     public function getCartId()
     {
         $cartData = $this->getCartData();
@@ -24,17 +27,27 @@ class EcommerceCart
         return $cartData['cart_uuid'];
     }
 
+    /**
+     * @return bool
+     */
     public function hasItems()
     {
         $cartData = $this->getCartData();
         return array_key_exists('items', $cartData) && count($cartData['items']);
     }
 
+    /**
+     * @param $itemId
+     * @return bool
+     */
     public function hasItem($itemId)
     {
         return $this->checkIdInCartItems($itemId);
     }
 
+    /**
+     * @return int
+     */
     public function countItems()
     {
         $cartData = $this->getCartData();
@@ -44,6 +57,9 @@ class EcommerceCart
         return 0;
     }
 
+    /**
+     * @return mixed
+     */
     public function getItems()
     {
         $cartData = $this->getCartData();
@@ -53,6 +69,10 @@ class EcommerceCart
         return collect();
     }
 
+    /**
+     * @param $value
+     * @return void
+     */
     public function setTax($value)
     {
         $cartData = $this->getCartData();
@@ -69,6 +89,10 @@ class EcommerceCart
         $this->recalculateCartItemTotals();
     }
 
+    /**
+     * @param bool $value
+     * @return void
+     */
     public function setApplyTax(bool $value)
     {
         $cartData = $this->getCartData();
@@ -79,11 +103,17 @@ class EcommerceCart
         $this->recalculateCartItemTotals();
     }
 
+    /**
+     * @return mixed
+     */
     public function destroyCart()
     {
         return session()->forget(config('ecommerce-cart.cart_session_name'));
     }
 
+    /**
+     * @return void
+     */
     private function destroyCartIfEmpty()
     {
         if (!$this->hasItems()) {
@@ -91,10 +121,11 @@ class EcommerceCart
         }
     }
 
-    /* *********************************************************** */
+    /* ***************************************************************************************************  */
 
     /**
      * Add item to cart if not exists
+     *
      * @param array $cartDataToAdd
      * @return void
      */
@@ -118,8 +149,10 @@ class EcommerceCart
 
     /**
      * Create new CartItem
+     *
      * @param array $cartDataToAdd
      * @return void
+     * @throws \Exception
      */
     private function createCartItem(array $cartDataToAdd)
     {
@@ -135,6 +168,12 @@ class EcommerceCart
         $this->setCartData($cartData);
     }
 
+    /**
+     * Increase CartItem amount by CartItem id
+     *
+     * @param $itemId
+     * @return void
+     */
     public function incrementCartItem($itemId)
     {
         $cartData = $this->getCartData();
@@ -152,6 +191,12 @@ class EcommerceCart
         $this->setCartData($cartData);
     }
 
+    /**
+     * Decrease CartItem amount by CartItem id
+     *
+     * @param $itemId
+     * @return void
+     */
     public function decrementCartItem($itemId)
     {
         $cartData = $this->getCartData();
@@ -177,6 +222,12 @@ class EcommerceCart
 
     }
 
+    /**
+     * Remove CartItem by CartItem id
+     *
+     * @param $itemId
+     * @return void
+     */
     public function removeCartItem($itemId)
     {
         $cartData = $this->getCartData();
@@ -195,6 +246,11 @@ class EcommerceCart
         $this->destroyCartIfEmpty();
     }
 
+    /**
+     * Update CartItem by CartItem id
+     * @param $cartItem
+     * @return void
+     */
     public function updateCartItem($cartItem)
     {
         $cartData = $this->getCartData();
@@ -210,6 +266,13 @@ class EcommerceCart
         }
     }
 
+    /**
+     * Update given key in all CartItems
+     *
+     * @param $key
+     * @param $value
+     * @return void
+     */
     public function updateCartItemsDataValue($key, $value)
     {
         $cartData = $this->getCartData();
@@ -223,6 +286,11 @@ class EcommerceCart
         }
     }
 
+    /**
+     * Check if id exists in CartItems
+     * @param $itemId
+     * @return bool
+     */
     public function checkIdInCartItems($itemId)
     {
         $cartData = $this->getCartData();
@@ -237,35 +305,13 @@ class EcommerceCart
         return false;
     }
 
-    /* *********************************************************** */
+    /* ***************************************************************************************************  */
 
-    private function addCartData($key, $value)
-    {
-        $cartData = $this->getCartData();
-        $cartData[$key] = $value;
-        $this->setCartData($cartData);
-    }
-
-    private function removeCartData($key)
-    {
-        $cartData = $this->getCartData();
-        if (array_key_exists($key, $cartData)) {
-            unset($cartData[$key]);
-            $this->setCartData($cartData);
-        }
-    }
-
-    public function getCartDataByKey($key)
-    {
-        $cartData = $this->getCartData();
-        if (array_key_exists($key, $cartData)) {
-            return $cartData[$key];
-        }
-        return null;
-    }
-
-    /* *********************************************************** */
-
+    /**
+     * Force recalculation of CartItem totals
+     *
+     * @return void
+     */
     public function recalculateCartItemTotals()
     {
         $cartData = $this->getCartData();
@@ -278,31 +324,102 @@ class EcommerceCart
         }
     }
 
-    /* *********************************************************** */
+    /* ***************************************************************************************************  */
 
-    public function getCartData()
-    {
-        return session(config('ecommerce-cart.cart_session_name'), []);
-    }
-
-    private function setCartData($cartData)
-    {
-        session([config('ecommerce-cart.cart_session_name') => $cartData]);
-    }
-
+    /**
+     * Set Custom CartData by key value
+     *
+     * @param $key
+     * @param $value
+     * @return void
+     * @throws \Exception
+     */
     public function setCustomCartData($key, $value)
     {
         $this->validateCustomCartData($key);
         $this->addCartData($key, $value);
     }
 
+    /**
+     * Remove CartData by key
+     *
+     * @param $key
+     * @return void
+     * @throws \Exception
+     */
     public function removeCustomCartData($key)
     {
         $this->validateCustomCartData($key);
         $this->removeCartData($key);
     }
 
-    /* *********************************************************** SHIPPING */
+    /**
+     * Get CartData by key
+     *
+     * @param $key
+     * @return mixed|null
+     */
+    public function getCartDataByKey($key)
+    {
+        $cartData = $this->getCartData();
+        if (array_key_exists($key, $cartData)) {
+            return $cartData[$key];
+        }
+        return null;
+    }
+
+    /* *************************************************************************************************** private */
+
+    /**
+     * Private method, use getCartDataByKey($key)
+     *
+     * @return mixed
+     */
+    private function getCartData()
+    {
+        return session(config('ecommerce-cart.cart_session_name'), []);
+    }
+
+    /**
+     * Private method, no option to set all cartData, alternative setCustomCartData($key, $value)
+     * @param $cartData
+     * @return void
+     */
+    private function setCartData($cartData)
+    {
+        session([config('ecommerce-cart.cart_session_name') => $cartData]);
+    }
+
+    /**
+     * Private method, use setCustomCartData($key, $value)
+     *
+     * @param $key
+     * @param $value
+     * @return void
+     */
+    private function addCartData($key, $value)
+    {
+        $cartData = $this->getCartData();
+        $cartData[$key] = $value;
+        $this->setCartData($cartData);
+    }
+
+    /**
+     * Private method, use removeCustomCartData($key)
+     *
+     * @param $key
+     * @return void
+     */
+    private function removeCartData($key)
+    {
+        $cartData = $this->getCartData();
+        if (array_key_exists($key, $cartData)) {
+            unset($cartData[$key]);
+            $this->setCartData($cartData);
+        }
+    }
+
+    /* *************************************************************************************************** SHIPPING */
 
     public function hasShipping()
     {
@@ -332,7 +449,7 @@ class EcommerceCart
         return null;
     }
 
-    /* *********************************************************** COUPON */
+    /* *************************************************************************************************** COUPON */
 
     public function setCoupon($coupon)
     {
@@ -362,7 +479,7 @@ class EcommerceCart
         return null;
     }
 
-    /* *********************************************************** TOTALS */
+    /* *************************************************************************************************** TOTALS */
 
     private function throwCalculateTotalsException()
     {
@@ -466,10 +583,10 @@ class EcommerceCart
         return 0;
     }
 
-    /* *********************************************************** VALIDATIONS */
+    /* *************************************************************************************************** VALIDATIONS */
 
     /**
-     *
+     * @return void
      */
     private function validateCartRequiredData()
     {
