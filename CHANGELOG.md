@@ -2,6 +2,9 @@
 
 All notable changes to `ecommerce-cart` will be documented in this file
 
+## 1.0.0 - 2024-07-01
+- New major version
+
 ## 0.2.1 - 2023-01-18
 
 - Shipping
