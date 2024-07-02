@@ -2,6 +2,9 @@
 
 All notable changes to `ecommerce-cart` will be documented in this file
 
+## 1.0.0 - 2024-07-02
+- CartItem validateTax method
+
 ## 1.0.0 - 2024-07-01
 - New major version
 

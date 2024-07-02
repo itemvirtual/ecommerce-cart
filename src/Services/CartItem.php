@@ -36,7 +36,7 @@ class CartItem
             $this->createProperty($key, $value);
         }
 
-        $this->isValidTax = $this->tax && floatval($this->tax) >= 0;
+        $this->validateTax();
 
         $this->calculateCartItemTotals();
     }
@@ -90,6 +90,13 @@ class CartItem
         return $this->totals;
     }
 
+    /* *************************************************************************************************** Validate Tax value */
+
+    private function validateTax()
+    {
+        $this->isValidTax = $this->tax && floatval($this->tax) >= 0;
+    }
+
     /* *************************************************************************************************** Calculate totals */
 
     /**
@@ -98,6 +105,8 @@ class CartItem
     public function calculateItemSubtotal()
     {
         $itemSubtotal = 0;
+        $this->validateTax();
+
         if (config('ecommerce-cart.taxes_included') && $this->isValidTax) {
             $itemSubtotal = $this->amount * floatval($this->price / (1 + ($this->tax / 100)));
         } else {
@@ -115,6 +124,7 @@ class CartItem
     public function calculateItemTaxTotal()
     {
         $taxesItemTotals = 0;
+        $this->validateTax();
 
         if ($this->applyTax && $this->isValidTax) {
             if (config('ecommerce-cart.taxes_included')) {
@@ -134,6 +144,7 @@ class CartItem
     public function calculateItemTotal()
     {
         $itemTotal = 0;
+        $this->validateTax();
 
         if ($this->applyTax && $this->isValidTax) {
             if (config('ecommerce-cart.taxes_included')) {
